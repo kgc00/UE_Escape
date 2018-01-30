@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Gameframework/Actor.h"
 #include "PositionReporter.h"
 
 
@@ -18,17 +19,14 @@ UPositionReporter::UPositionReporter()
 void UPositionReporter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
+	FString ObjectName = GetOwner()->GetName();
+	UE_LOG(LogTemp, Warning, TEXT("Position Reporting for %s!"), *ObjectName);
 }
 
 
 // Called every frame
 void UPositionReporter::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);		
 }
 
