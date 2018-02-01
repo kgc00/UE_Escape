@@ -15,6 +15,8 @@ class ESCAPEROOMTUTORIAL_API UGrabber : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UGrabber();
+	FVector PlayerViewLocation;
+	FRotator PlayerRotation;
 
 protected:
 	// Called when the game starts
@@ -23,6 +25,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	float Reach = 100.00f;
 
 		
 	
