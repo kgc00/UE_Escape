@@ -8,6 +8,7 @@
 #include "Components/ActorComponent.h"
 #include "OpenDoor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorRequest);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ESCAPEROOMTUTORIAL_API UOpenDoor : public UActorComponent
@@ -18,24 +19,17 @@ public:
 	// Sets default values for this component's properties
 	UOpenDoor();
 	
-	
+	UPROPERTY(BluePrintAssignable)
+	FDoorRequest OnOpenRequest;
+
+	UPROPERTY(BluePrintAssignable)
+	FDoorRequest OnCloseRequest;
 
 private:
-	UPROPERTY(VisibleAnywhere)
-	float OpenAngle = 90.0f;
-
-	UPROPERTY(VisibleAnywhere)
-		float CloseAngle = 0.0f;
-
 	UPROPERTY(EditAnywhere)
 		ATriggerVolume* PressurePlate;
 
 	AActor* Owner;
-
-		UPROPERTY(EditAnywhere)
-		float DoorCloseDelay = 1.0f;
-
-		float LastDoorOpenTime;
 
 		float MassToEscape = 50.f;
 		float TotalMass = 0.f;
@@ -43,10 +37,6 @@ private:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-	void OpenDoor();
-
-	void CloseDoor();
 
 public:	
 	// Called every frame
