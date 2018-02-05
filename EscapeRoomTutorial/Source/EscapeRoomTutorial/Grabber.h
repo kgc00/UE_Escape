@@ -44,4 +44,8 @@ private:
 	void FindInputComponent();
 
 	const FHitResult GetFirstPhysicsBodyInReach();
+
+	FVector GetReachLineStart();
+
+	FVector GetReachLineEnd();
 };

@@ -31,13 +31,14 @@ private:
 		ATriggerVolume* PressurePlate;
 
 	AActor* Owner;
-		
-		AActor* ActorThatOpensDoor;
 
 		UPROPERTY(EditAnywhere)
 		float DoorCloseDelay = 1.0f;
 
 		float LastDoorOpenTime;
+
+		float MassToEscape = 50.f;
+		float TotalMass = 0.f;
 
 protected:
 	// Called when the game starts
@@ -50,4 +51,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	float GetTotalMassOfActorsOnPlate();
 };
