@@ -22,7 +22,11 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();	
+	FindPhysicsHandleComponent();
+	FindInputComponent();
+}
 
+void UGrabber::FindPhysicsHandleComponent() {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (PhysicsHandle) {
 		UE_LOG(LogTemp, Warning, TEXT("PhysicsHandle found! Name: %s"), *PhysicsHandle->GetName());
@@ -30,7 +34,9 @@ void UGrabber::BeginPlay()
 	else {
 		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle not found on %s!"), *GetOwner()->GetName());
 	}
+}
 
+void UGrabber::FindInputComponent() {
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if (InputComponent) {
 		UE_LOG(LogTemp, Warning, TEXT("InputComponent found! Name: %s"), *InputComponent->GetName());
@@ -40,21 +46,31 @@ void UGrabber::BeginPlay()
 	else {
 		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle not found on %s!"), *GetOwner()->GetName());
 	}
-
 }
 
 void UGrabber::Grab() {
-	UE_LOG(LogTemp, Error, TEXT("Grab function called!"));
+	UE_LOG(LogTemp, Warning, TEXT("Grab function called!"));
+	auto HitResult = GetFirstPhysicsBodyInReach();
+	auto ComponentToGrab = HitResult.GetComponent();
+	auto ActorHit = HitResult.GetActor();
+	if (ActorHit) {
+	PhysicsHandle->GrabComponent(ComponentToGrab, NAME_None, ComponentToGrab->GetOwner()->GetActorLocation(), true);
+	UE_LOG(LogTemp, Warning, TEXT("ComponentToGrab is %s"), *ComponentToGrab->GetName());
+	}
 }
 
 void UGrabber::Release() {
-	UE_LOG(LogTemp, Error, TEXT("Release function called!"));
+	UE_LOG(LogTemp, Warning, TEXT("Release function called!"));
 }
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
+const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
+{
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewLocation, OUT PlayerRotation);
 	//UE_LOG(LogTemp, Warning, TEXT("Logging view! Location: %s, Position: %s"), *PlayerViewLocation.ToString(), *PlayerRotation.ToString())
 
@@ -66,8 +82,12 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	FHitResult Hit;
 	GetWorld()->LineTraceSingleByObjectType(OUT Hit, PlayerViewLocation, LineTraceEnd, FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), TraceParams);
 	AActor* ActorGrabbed = Hit.GetActor();
-	if (ActorGrabbed)	{
-	//UE_LOG(LogTemp, Warning, TEXT("Logging Actor Hit By Grabber! Name: %s"), *ActorGrabbed->GetName());
+	if (ActorGrabbed) {
+		UE_LOG(LogTemp, Warning, TEXT("Logging Actor Hit By Grabber! Name: %s"), *ActorGrabbed->GetName());
 	}
+	return Hit;
+
 }
+
+
 
